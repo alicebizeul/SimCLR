@@ -36,6 +36,12 @@ Simply run the following to pre-train a ResNet encoder using SimCLR on the CIFAR
 python main.py --dataset CIFAR10
 ```
 
+### Training LVCL on CIFAR10:
+Simply run the following to pre-train a ResNet encoder using SimCLR on the CIFAR-10 dataset:
+```
+python main.py --dataset CIFAR10 --custom
+```
+
 ### Results
 These are the top-1 accuracy of linear classifiers trained on the (frozen) representations learned by SimCLR:
 
