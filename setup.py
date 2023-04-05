@@ -8,6 +8,9 @@ import io
 import os
 import sys
 from shutil import rmtree
+from sklearn.cluster import KMeans, SpectralClustering
+from sklearn.preprocessing import StandardScaler
+import torch
 
 from setuptools import find_packages, setup, Command
 

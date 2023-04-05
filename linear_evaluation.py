@@ -20,7 +20,7 @@ def inference(loader, simclr_model, device):
 
         # get encoding
         with torch.no_grad():
-            h, _, z, _ = simclr_model(x, x)
+            _, _, h, _, z, _ = simclr_model(x, x)
 
         h = h.detach()
 
@@ -167,9 +167,9 @@ if __name__ == "__main__":
     n_features = encoder.fc.in_features  # get dimensions of fc layer
 
     # load pre-trained model from checkpoint
-    simclr_model = SimCLR(encoder, args.projection_dim, n_features)
+    simclr_model = SimCLR(encoder, args.projection_dim, n_features, args.custom, torch.tensor(torch.ones([1,args.projection_dim,args.classes])), args.classes)
     model_fp = os.path.join(args.model_path, "checkpoint_{}.tar".format(args.epoch_num))
-    simclr_model.load_state_dict(torch.load(model_fp, map_location=args.device.type))
+    simclr_model.load_state_dict(torch.load(model_fp, map_location=args.device.type),strict=False)
     simclr_model = simclr_model.to(args.device)
     simclr_model.eval()
 

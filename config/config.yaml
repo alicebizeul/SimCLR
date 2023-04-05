@@ -32,3 +32,9 @@ reload: False
 # logistic regression options
 logistic_batch_size: 256
 logistic_epochs: 500
+
+# custom args
+custom: False
+classes: 10
+normalize: False
+save_every: 10
