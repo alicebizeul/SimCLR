@@ -175,7 +175,7 @@ def main(gpu, args):
     args.global_step = 0
     args.current_epoch = 0
     for epoch in range(args.start_epoch, args.epochs):
-        if args.learn_std and args.std_epochs >= epoch:
+        if args.learn_std and epoch >= args.std_epochs :
             for param in model.parameters():
                 param.requires_grad = True
         if train_sampler is not None:
