@@ -156,6 +156,7 @@ def main(gpu, args):
     if args.custom: criterion = Custom_InfoNCE(args.batch_size)
     else:criterion = NT_Xent(args.batch_size, args.temperature, args.world_size)
     print(criterion)
+    print(model.parameters)
 
     # DDP / DP
     if args.dataparallel:
