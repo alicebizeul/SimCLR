@@ -164,10 +164,12 @@ if __name__ == "__main__":
     )
 
     encoder = get_resnet(args.resnet, pretrained=False)
+    projector = nn.Sequential(nn.Linear(n_features, n_features, bias=False),nn.ReLU(),nn.Linear(n_features, args.projection_dim, bias=False),)
+
     n_features = encoder.fc.in_features  # get dimensions of fc layer
 
     # load pre-trained model from checkpoint
-    simclr_model = SimCLR(encoder, args.projection_dim, n_features, args.custom, torch.tensor(torch.ones([1,args.projection_dim,args.classes])), args.classes)
+    simclr_model = SimCLR(encoder, projector, n_features, args.custom, torch.tensor(torch.ones([1,args.projection_dim,args.classes])), args.classes,learn_std=args.learn_std)
     model_fp = os.path.join(args.model_path, "checkpoint_{}.tar".format(args.epoch_num))
     simclr_model.load_state_dict(torch.load(model_fp, map_location=args.device.type),strict=False)
     simclr_model = simclr_model.to(args.device)
