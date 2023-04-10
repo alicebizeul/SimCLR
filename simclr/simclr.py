@@ -42,7 +42,6 @@ class SimCLR(nn.Module):
 
             if self.learn_std: std = torch.unsqueeze(self.conditional_prior["std"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])
 
-            print(std.shape,means.shape,x_i.shape,z_i.shape)
 
             z_i = torch.unsqueeze(z_i, -1).repeat([1, 1, self.classes])
             z_j = torch.unsqueeze(z_j, -1).repeat([1, 1, self.classes])
@@ -50,7 +49,6 @@ class SimCLR(nn.Module):
             # computing gmm
             dist_i = z_i - means
             dist_j = z_j - means
-            print(dist_i.shape)
             if not self.learn_std:
                 p_z_y_i = -0.5 * torch.sum(dist_i * dist_i, dim=1)
 
