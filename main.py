@@ -24,7 +24,7 @@ from simclr.modules.sync_batchnorm import convert_model
 from model import load_optimizer, save_model
 from utils import yaml_config_hook
 import sklearn
-from sklearn import neighbors
+from sklearn import neighbors, clusters
 import umap
 import matplotlib.pyplot as plt   
 ################################################
@@ -53,10 +53,11 @@ def initialize(
     embeddings = encoder.forward(samples)
     embeddings = projection.forward(embeddings)
     if normalize: embeddings = embeddings/torch.sum(torch.pow(embeddings,2),dim=-1).unsqueeze(-1).repeat([1,embeddings.shape[-1]])
-    max_value = torch.max(torch.abs(embeddings))
+    #max_value = torch.max(torch.abs(embeddings))
 
-    kernel=neighbors.KernelDensity(metric="l1",kernel="gaussian").fit(embeddings.detach().cpu().numpy())
-    init_clusters = kernel.sample(classes)
+    #kernel=neighbors.KernelDensity(metric="l1",kernel="gaussian").fit(embeddings.detach().cpu().numpy())
+    #init_clusters = kernel.sample(classes)
+    init_clusters = sklearn.cluster.KMeans(classes).fit(embeddings).cluster_centers_
     return torch.transpose(torch.tensor(init_clusters), 1, 0).unsqueeze(0)
 ################################################
 
