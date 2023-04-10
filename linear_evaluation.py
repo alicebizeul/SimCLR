@@ -165,9 +165,8 @@ if __name__ == "__main__":
     )
 
     encoder = get_resnet(args.resnet, pretrained=False)
-    projector = nn.Sequential(nn.Linear(n_features, n_features, bias=False),nn.ReLU(),nn.Linear(n_features, args.projection_dim, bias=False),)
-
     n_features = encoder.fc.in_features  # get dimensions of fc layer
+    projector = nn.Sequential(nn.Linear(n_features, n_features, bias=False),nn.ReLU(),nn.Linear(n_features, args.projection_dim, bias=False),)
 
     # load pre-trained model from checkpoint
     simclr_model = SimCLR(encoder, projector, n_features, args.custom, torch.tensor(torch.ones([1,args.projection_dim,args.classes])), args.classes,learn_std=args.learn_std)
