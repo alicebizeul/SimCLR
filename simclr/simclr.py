@@ -61,7 +61,7 @@ class SimCLR(nn.Module):
             p_y_z_i = torch.nn.Softmax(dim=-1)(p_z_y_i)
             p_y_z_j = torch.nn.Softmax(dim=-1)(p_z_y_j)
 
-
+            print(self.conditional_prior["std"][0, :, :])
 
         else: 
             p_y_z_i, p_y_z_j = None, None
