@@ -24,7 +24,7 @@ from simclr.modules.sync_batchnorm import convert_model
 from model import load_optimizer, save_model
 from utils import yaml_config_hook
 import sklearn
-from sklearn import neighbors, clusters
+from sklearn import neighbors, cluster
 import umap
 import matplotlib.pyplot as plt   
 ################################################
