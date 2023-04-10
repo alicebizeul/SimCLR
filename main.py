@@ -44,7 +44,7 @@ def initialize(
     length = 10 if len(it) > 10 else len(it)
     for _ in range(length):
         (x, _), _ = next(it)
-        samples.append(torch.squeeze(x).detach().cpu())
+        samples.append(torch.squeeze(x))
     samples = torch.cat(samples, dim=0).to("cpu")
 
     if isinstance(encoder,torch.nn.Sequential): encoder = encoder.cpu()
@@ -57,7 +57,7 @@ def initialize(
 
     #kernel=neighbors.KernelDensity(metric="l1",kernel="gaussian").fit(embeddings.detach().cpu().numpy())
     #init_clusters = kernel.sample(classes)
-    init_clusters = sklearn.cluster.KMeans(classes).fit(embeddings).cluster_centers_
+    init_clusters = sklearn.cluster.KMeans(classes).fit(embeddings.detach().cpu().numpy()).cluster_centers_
     return torch.transpose(torch.tensor(init_clusters), 1, 0).unsqueeze(0)
 ################################################
 
