@@ -44,7 +44,7 @@ class SimCLR(nn.Module):
         if self.custom:
             means = torch.unsqueeze(self.conditional_prior["centroids"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])
 
-            if self.learn_std: std = torch.unsqueeze(self.conditional_prior["stds"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])
+            if self.learn_std: std = torch.unsqueeze(self.conditional_prior["std"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])
 
             print(std.shape,means.shape,x_i.shape,z_i.shape)
 
@@ -60,9 +60,9 @@ class SimCLR(nn.Module):
 
                 p_z_y_j = -0.5 * torch.sum(dist_j * dist_j, dim=1)
             else: 
-                p_z_y_i = -0.5 * torch.sum(dist_i * (std*dist_i), dim=1) - torch.log(torch.sqrt(torch.prod(self.conditional_prior["stds"][0, :, :])))     # each has to be ten
+                p_z_y_i = -0.5 * torch.sum(dist_i * (std*dist_i), dim=1) - torch.log(torch.sqrt(torch.prod(self.conditional_prior["std"][0, :, :])))     # each has to be ten
 
-                p_z_y_j = -0.5 * torch.sum(dist_j * (std*dist_j), dim=1) - torch.log(torch.sqrt(torch.prod(self.conditional_prior["stds"][0, :, :])))
+                p_z_y_j = -0.5 * torch.sum(dist_j * (std*dist_j), dim=1) - torch.log(torch.sqrt(torch.prod(self.conditional_prior["std"][0, :, :])))
 
             p_y_z_i = torch.nn.Softmax(dim=-1)(p_z_y_i)
             p_y_z_j = torch.nn.Softmax(dim=-1)(p_z_y_j)
