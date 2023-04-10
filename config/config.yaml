@@ -38,3 +38,6 @@ custom: False
 classes: 10
 normalize: False
 save_every: 10
+gif: True
+learn_std: True
+std_epochs: 5
