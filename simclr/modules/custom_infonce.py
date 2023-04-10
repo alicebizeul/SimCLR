@@ -4,12 +4,13 @@ import torch.distributed as dist
 from .gather import GatherLayer
 
 class Custom_InfoNCE(nn.Module):
-    def __init__(self, batch_size,):
+    def __init__(self, batch_size, bound):
         super(Custom_InfoNCE, self).__init__()
         self.criterion = nn.CrossEntropyLoss(reduction="sum")
         self.similarity_f = lambda x1, x2: custom_similarity(x1.unsqueeze(-1),x2.unsqueeze(-2))
         self.simclr_compatibility=False
         self.symetric=True
+        self.bound = bound
 
     def forward(self, anchor_rec, positive_rec):
 
@@ -28,6 +29,13 @@ class Custom_InfoNCE(nn.Module):
             neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
 
             total_loss_value = torch.mean(- pos + neg)
+        elif self.bound:
+            
+            num = - torch.mean(torch.log(sim12[..., range(d), range(d)]),dim=-1)
+            print("num",num.shape)
+            deno = torch.cat([sim12, sim11], dim=-1)
+            deno = torch.log(torch.sum(torch.mean(deno,dim=-1),dim=1))
+            total_loss_value = torch.mean(num + deno)
         else:
             # diagonal - targets where the values should be the highest
             raw_scores1 = torch.cat([sim12, sim11], dim=-1)
@@ -40,6 +48,11 @@ class Custom_InfoNCE(nn.Module):
                 pos = sim12[..., range(d), range(d)]
                 neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
                 total_loss_value += torch.mean(- pos + neg)
+            elif self.bound:
+                num = - torch.mean(torch.log(sim12[..., range(d), range(d)]),dim=-1)
+                deno = torch.cat([sim12, sim22], dim=-1)
+                deno = torch.log(torch.sum(torch.mean(deno,dim=-1),dim=1))
+                total_loss_value += torch.mean(num + deno)
             else:
                 # creating matrix with all similarities
                 raw_scores1 = torch.cat([sim12, sim22], dim=-1)

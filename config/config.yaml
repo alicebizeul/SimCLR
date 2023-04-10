@@ -39,5 +39,6 @@ classes: 10
 normalize: False
 save_every: 10
 gif: True
-learn_std: True
+learn_std: False
 std_epochs: 5
+bound: False
