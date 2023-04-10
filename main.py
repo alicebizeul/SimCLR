@@ -141,9 +141,8 @@ def main(gpu, args):
     encoder = get_resnet(args.resnet, pretrained=False)
     n_features = encoder.fc.in_features  # get dimensions of fc layer
     projector = nn.Sequential(nn.Linear(n_features, n_features, bias=False),nn.ReLU(),nn.Linear(n_features, args.projection_dim, bias=False),)
-    #if args.custom: init_clusters=initialize(train_loader,encoder,projector,args.classes,args.normalize)
+    if args.custom: init_clusters=initialize(train_loader,encoder,projector,args.classes,args.normalize)
     # initialize model
-    init_clusters=None
     model = SimCLR(encoder, projector, n_features, args.custom, init_clusters if args.custom else None,args.classes if args.custom else None,learn_std=args.learn_std)
     
     if args.reload:
