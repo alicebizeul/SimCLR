@@ -42,3 +42,4 @@ gif: True
 learn_std: False
 std_epochs: 5
 bound: False
+simclr_compability: False

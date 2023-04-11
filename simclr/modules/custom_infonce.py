@@ -4,11 +4,11 @@ import torch.distributed as dist
 from .gather import GatherLayer
 
 class Custom_InfoNCE(nn.Module):
-    def __init__(self, batch_size, bound):
+    def __init__(self, batch_size, bound, simclr_compatibility):
         super(Custom_InfoNCE, self).__init__()
         self.criterion = nn.CrossEntropyLoss(reduction="sum")
         self.similarity_f = lambda x1, x2: custom_similarity(x1.unsqueeze(-1),x2.unsqueeze(-2))
-        self.simclr_compatibility=False
+        self.simclr_compatibility=simclr_compatibility
         self.symetric=True
         self.bound = bound
 

@@ -154,7 +154,7 @@ def main(gpu, args):
 
     # optimizer / loss
     optimizer, scheduler = load_optimizer(args, model)
-    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound)
+    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound,args.simclr_compatibility)
     else:criterion = NT_Xent(args.batch_size, args.temperature, args.world_size)
 
     # DDP / DP
@@ -205,8 +205,9 @@ def main(gpu, args):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description="SimCLR")
+
     config = yaml_config_hook("./config/config.yaml")
-    print(config)
+    print(config,parser)
     for k, v in config.items():
         parser.add_argument(f"--{k}", default=v, type=type(v))
 
