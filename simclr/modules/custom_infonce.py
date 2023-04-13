@@ -23,15 +23,19 @@ class Custom_InfoNCE(nn.Module):
         sim22 = self.similarity_f(positive_rec,positive_rec)
         sim12 = self.similarity_f(anchor_rec,positive_rec)
 
+        d = sim12.shape[-1]
+
         print("shape sim",sim11.shape)
 
         # removal of 1:1 pairs
-        sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
-        sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
+        if not self.bound:
+            sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
+            sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
+        else:
+            sim11 = sim11.masked_select(~torch.eye(sim11.shape[0], dtype=bool).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim11.shape[0], sim11.shape[1], sim11.shape[0] - 1)
+            sim22 = sim22.masked_select(~torch.eye(sim22.shape[0], dtype=bool).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim22.shape[0], sim22.shape[1], sim22.shape[0] - 1)
 
         print("Removal of duplo",sim11.shape)
-
-        d = sim12.shape[-1]
 
         if not self.simclr_compatibility:
             pos = sim12[..., range(d), range(d)]
