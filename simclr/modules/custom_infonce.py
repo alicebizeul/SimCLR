@@ -37,7 +37,7 @@ class Custom_InfoNCE(nn.Module):
             sim11 = sim11.masked_select(~torch.eye(sim11.shape[0], dtype=bool).to(DEVICE).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim11.shape[0], sim11.shape[1], sim11.shape[0] - 1)
             sim22 = sim22.masked_select(~torch.eye(sim22.shape[0], dtype=bool).to(DEVICE).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim22.shape[0], sim22.shape[1], sim22.shape[0] - 1)
 
-        print("Removal of duplo",sim11.shape)
+        print("Removal of duplo",sim11.shape,sim12[..., range(d), range(d)])
 
         # if not self.simclr_compatibility:
         #     pos = sim12[..., range(d), range(d)]
