@@ -39,12 +39,12 @@ class Custom_InfoNCE(nn.Module):
 
         print("Removal of duplo",sim11.shape)
 
-        if not self.simclr_compatibility:
-            pos = sim12[..., range(d), range(d)]
-            neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
+        # if not self.simclr_compatibility:
+        #     pos = sim12[..., range(d), range(d)]
+        #     neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
 
-            total_loss_value = torch.mean(- pos + neg)
-        elif self.bound:
+        #     total_loss_value = torch.mean(- pos + neg)
+        if self.bound:
             if self.subsample:
                 keep=random.shuffle(list(np.range(anchor_rec.shape[1])))
                 sim11=sim11[:,keep,:]
@@ -62,11 +62,11 @@ class Custom_InfoNCE(nn.Module):
 
         if self.symetric: 
             sim12 = self.similarity_f(positive_rec,anchor_rec)
-            if not self.simclr_compatibility:
-                pos = sim12[..., range(d), range(d)]
-                neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
-                total_loss_value += torch.mean(- pos + neg)
-            elif self.bound:
+            # if not self.simclr_compatibility:
+            #     pos = sim12[..., range(d), range(d)]
+            #     neg = torch.logsumexp(torch.cat([sim11,pos.unsqueeze(1)],dim=1),dim=1)
+            #     total_loss_value += torch.mean(- pos + neg)
+            if self.bound:
                 if self.subsample:
                     sim12=sim12[:,keep,:]
                 num = - torch.mean(torch.log(sim12[..., range(d), range(d)]),dim=1)

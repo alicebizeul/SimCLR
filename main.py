@@ -154,7 +154,7 @@ def main(gpu, args):
 
     # optimizer / loss
     optimizer, scheduler = load_optimizer(args, model, args.lr if args.lr_change else None)
-    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound,args.simclr_compatibility,subsample=args.subsample)
+    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound,simclr_compatibility=args.simclr_compatibility,subsample=args.subsample)
     else:criterion = NT_Xent(args.batch_size, args.temperature, args.world_size)
 
     # DDP / DP
