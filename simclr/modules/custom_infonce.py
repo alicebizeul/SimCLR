@@ -17,7 +17,7 @@ class Custom_InfoNCE(nn.Module):
 
     def forward(self, anchor_rec, positive_rec):
 
-        print("Original inputs",anchor_rec.shape,positive_rec.shape)
+        print("Original inputs",anchor_rec.shape,positive_rec.shape,torch.matmul(anchor_rec,positive_rec).shape)
 
         sim11 = self.similarity_f(anchor_rec,anchor_rec)
         sim22 = self.similarity_f(positive_rec,positive_rec)
@@ -85,7 +85,7 @@ def custom_similarity(p_z_zrec,p_zpos_zrecpos,bound,subsample):
             keep=random.shuffle(list(np.range(p_z_zrec.shape[0])))
             p_z_zrec = p_z_zrec[keep,:,:]
             p_zpos_zrecpos = p_zpos_zrecpos[keep,:,:]
-        else: return torch.log(torch.sum(torch.matmul(p_z_zrec,p_zpos_zrecpos),dim=0))  # log because cross entropy adds an exp
+        else: return torch.log(torch.sum(torch.matmul(p_z_zrec,p_zpos_zrecpos),dim=-1))  # log because cross entropy adds an exp
     else: return torch.matmul(p_z_zrec,p_zpos_zrecpos)
 
 
