@@ -5,6 +5,8 @@ from .gather import GatherLayer
 import numpy as np
 import random
 
+DEVICE = torch.device("cuda:0") if torch.cuda.is_available() else torch.device("cpu")
+
 class Custom_InfoNCE(nn.Module):
     def __init__(self, batch_size, bound, simclr_compatibility,subsample):
         super(Custom_InfoNCE, self).__init__()
@@ -32,8 +34,8 @@ class Custom_InfoNCE(nn.Module):
             sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
             sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
         else:
-            sim11 = sim11.masked_select(~torch.eye(sim11.shape[0], dtype=bool).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim11.shape[0], sim11.shape[1], sim11.shape[0] - 1)
-            sim22 = sim22.masked_select(~torch.eye(sim22.shape[0], dtype=bool).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim22.shape[0], sim22.shape[1], sim22.shape[0] - 1)
+            sim11 = sim11.masked_select(~torch.eye(sim11.shape[0], dtype=bool).to(DEVICE).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim11.shape[0], sim11.shape[1], sim11.shape[0] - 1)
+            sim22 = sim22.masked_select(~torch.eye(sim22.shape[0], dtype=bool).to(DEVICE).unsqueeze(1).repeat([1,sim11.shape[1],1])).view(sim22.shape[0], sim22.shape[1], sim22.shape[0] - 1)
 
         print("Removal of duplo",sim11.shape)
 
