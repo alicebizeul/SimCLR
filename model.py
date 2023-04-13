@@ -5,15 +5,18 @@ from simclr import SimCLR
 from simclr.modules import LARS
 
 
-def load_optimizer(args, model):
+def load_optimizer(args, model, lr=None):
 
     scheduler = None
     if args.optimizer == "Adam":
-        optimizer = torch.optim.Adam(model.parameters(), lr=3e-4)  # TODO: LARS
+        if lr is None: learning_rate = 3e-4
+        else: learning_rate = lr
+        optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)  # TODO: LARS
     elif args.optimizer == "LARS":
         # optimized using LARS with linear learning rate scaling
         # (i.e. LearningRate = 0.3 × BatchSize/256) and weight decay of 10−6.
-        learning_rate = 0.3 * args.batch_size / 256
+        if lr is None: learning_rate = 0.3 * args.batch_size / 256
+        else: learning_rate = lr
         optimizer = LARS(
             model.parameters(),
             lr=learning_rate,

@@ -52,7 +52,7 @@ def initialize(
     
     embeddings = encoder.forward(samples)
     embeddings = projection.forward(embeddings)
-    if normalize: embeddings = embeddings/torch.sum(torch.pow(embeddings,2),dim=-1).unsqueeze(-1).repeat([1,embeddings.shape[-1]])
+    if normalize: embeddings = embeddings/torch.sqrt(torch.sum(torch.pow(embeddings,2),dim=-1)).unsqueeze(-1).repeat([1,embeddings.shape[-1]])
     #max_value = torch.max(torch.abs(embeddings))
 
     #kernel=neighbors.KernelDensity(metric="l1",kernel="gaussian").fit(embeddings.detach().cpu().numpy())
@@ -143,7 +143,7 @@ def main(gpu, args):
     projector = nn.Sequential(nn.Linear(n_features, n_features, bias=False),nn.ReLU(),nn.Linear(n_features, args.projection_dim, bias=False),)
     if args.custom: init_clusters=initialize(train_loader,encoder,projector,args.classes,args.normalize)
     # initialize model
-    model = SimCLR(encoder, projector, n_features, args.custom, init_clusters if args.custom else None,args.classes if args.custom else None,learn_std=args.learn_std)
+    model = SimCLR(encoder, projector, n_features, args.custom, init_clusters if args.custom else None,args.classes if args.custom else None,learn_std=args.learn_std,normalize=args.normalize)
     
     if args.reload:
         model_fp = os.path.join(
@@ -153,8 +153,8 @@ def main(gpu, args):
     model = model.to(args.device)
 
     # optimizer / loss
-    optimizer, scheduler = load_optimizer(args, model)
-    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound,args.simclr_compatibility)
+    optimizer, scheduler = load_optimizer(args, model, args.lr if args.lr_change else None)
+    if args.custom: criterion = Custom_InfoNCE(args.batch_size,args.bound,args.simclr_compatibility,subsample=args.subsample)
     else:criterion = NT_Xent(args.batch_size, args.temperature, args.world_size)
 
     # DDP / DP
@@ -170,7 +170,7 @@ def main(gpu, args):
 
     writer = None
     if args.nr == 0:
-        writer = SummaryWriter("/cluster/home/abizeul/test")
+        writer = SummaryWriter(args.model_path)
 
     args.global_step = 0
     args.current_epoch = 0

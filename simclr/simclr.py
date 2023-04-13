@@ -10,13 +10,14 @@ class SimCLR(nn.Module):
     We opt for simplicity and adopt the commonly used ResNet (He et al., 2016) to obtain hi = f(x ̃i) = ResNet(x ̃i) where hi ∈ Rd is the output after the average pooling layer.
     """
 
-    def __init__(self, encoder, projector, n_features, custom, init_clusters=None, classes=None, learn_std=False):
+    def __init__(self, encoder, projector, n_features, custom, init_clusters=None, classes=None, learn_std=False, normalize=False):
         super(SimCLR, self).__init__()
 
         self.encoder = encoder
         self.n_features = n_features
         self.custom = custom
         self.learn_std = learn_std
+        self.normalize = normalize
         if self.custom:
             self.conditional_prior= nn.ParameterDict()
             self.conditional_prior["centroids"] = nn.Parameter(init_clusters,requires_grad=True)
@@ -38,6 +39,8 @@ class SimCLR(nn.Module):
         z_j = self.projector(h_j)
 
         if self.custom:
+            if self.normalize:
+                z_i, z_j = z_i/torch.sqrt(torch.sum(torch.pow(z_i,2),-1)).unsqueeze(-1).repeat([1,z_i.shape[-1]]), z_j/torch.sqrt(torch.sum(torch.pow(z_i,2),-1)).unsqueeze(-1).repeat([1,z_j.shape[-1]])
             means = torch.unsqueeze(self.conditional_prior["centroids"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])
 
             if self.learn_std: std = torch.unsqueeze(self.conditional_prior["std"][0, :, :], 0).repeat([z_i.shape[0], 1, 1])

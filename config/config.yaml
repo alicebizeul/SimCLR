@@ -37,9 +37,12 @@ logistic_epochs: 500
 custom: False
 classes: 10
 normalize: False
-save_every: 10
-gif: True
+save_every: 5
+gif: False
 learn_std: False
 std_epochs: 5
 bound: False
 simclr_compatibility: False
+lr_change: False
+lr: 0.3
+subsample: False
