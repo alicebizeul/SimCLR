@@ -17,7 +17,7 @@ class Custom_InfoNCE(nn.Module):
 
     def forward(self, anchor_rec, positive_rec):
 
-        print("Original inputs",anchor_rec.shape,positive_rec.shape,torch.matmul(anchor_rec.unsqueeze(-1),torch.transpose(positive_rec.unsqueeze(-1),0,-1)).shape)
+        print("Original inputs",anchor_rec.shape,positive_rec.shape,anchor_rec.unsqueeze(-1)*torch.transpose(positive_rec.unsqueeze(-1),0,-1).shape)
 
         sim11 = self.similarity_f(anchor_rec,anchor_rec)
         sim22 = self.similarity_f(positive_rec,positive_rec)
