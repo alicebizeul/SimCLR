@@ -17,15 +17,19 @@ class Custom_InfoNCE(nn.Module):
 
     def forward(self, anchor_rec, positive_rec):
 
+        print("Original inputs",anchor_rec.shape,positive_rec.shape)
+
         sim11 = self.similarity_f(anchor_rec,anchor_rec)
         sim22 = self.similarity_f(positive_rec,positive_rec)
         sim12 = self.similarity_f(anchor_rec,positive_rec)
 
-        print("shape sim",sim11.shape,anchor_rec.shape)
+        print("shape sim",sim11.shape)
 
         # removal of 1:1 pairs
         sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
         sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
+
+        print("Removal of duplo",sim11.shape)
 
         d = sim12.shape[-1]
 
