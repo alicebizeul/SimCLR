@@ -27,15 +27,15 @@ class Custom_InfoNCE(nn.Module):
 
         d = sim12.shape[-1]
 
-        print("shape sim",sim11.shape,sim11)
+        print("shape sim",sim11.shape,sim11[..., range(d), range(d)])
 
         # removal of 1:1 pairs
         if not self.bound:
             sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
             sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
         else:
-            sim11 = torch.transpose(torch.transpose(sim11,1,2).flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1, sim11.shape[1])[:,:-1,:].reshape(sim11.shape[0], sim11.shape[0]-1,sim11.shape[1]),1,2)
-            sim22 = torch.transpose(torch.transpose(sim22,1,2).flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1, sim22.shape[1])[:,:-1,:].reshape(sim22.shape[0], sim22.shape[0]-1,sim22.shape[1]),1,2)
+            sim11 = torch.transpose(torch.transpose(sim11,0,1).flatten()[1:].view(sim11.shape[1],sim11.shape[0]-1, sim11.shape[0]+1, )[:,:,:-1].reshape(sim11.shape[1],sim11.shape[0], sim11.shape[0]-1,),0,1)
+            sim22 = torch.transpose(torch.transpose(sim22,0,1).flatten()[1:].view(sim22.shape[1],sim22.shape[0]-1, sim22.shape[0]+1,)[:,:,:-1].reshape(sim22.shape[1],sim22.shape[0], sim22.shape[0]-1,),0,1)
 
         print("After",sim11)
 
