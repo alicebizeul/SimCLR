@@ -43,7 +43,7 @@ class Custom_InfoNCE(nn.Module):
 
         print("After",sim11)
 
-        print("Removal of duplo",sim11.shape,sim12[..., range(d), range(d)])
+        print("Removal of duplo",sim11.shape,)
 
         # if not self.simclr_compatibility:
         #     pos = sim12[..., range(d), range(d)]
