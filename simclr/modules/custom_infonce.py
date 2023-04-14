@@ -65,6 +65,7 @@ class Custom_InfoNCE(nn.Module):
             total_loss_value = torch.nn.CrossEntropyLoss()(raw_scores1, targets1)
 
         if self.symetric: 
+            print(positive_rec)
             sim12 = self.similarity_f(positive_rec,anchor_rec)
             # if not self.simclr_compatibility:
             #     pos = sim12[..., range(d), range(d)]
