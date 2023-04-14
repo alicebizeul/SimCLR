@@ -35,8 +35,8 @@ class Custom_InfoNCE(nn.Module):
             sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
         else:
             list_index=[idx for idx in range(sim11.shape[0]*sim11.shape[1]*sim11.shape[2]) if (idx-((idx//(sim11.shape[0]*sim11.shape[-1]))*(sim11.shape[0]*sim11.shape[-1])))%sim11.shape[0] != ((idx-((idx//(sim11.shape[0]*sim11.shape[-1]))*(sim11.shape[0]*sim11.shape[-1])))//sim11.shape[0]) ]  #.remove(-1)
-            sim11= torch.transpose(torch.transpose(sim11,0.1).flatten()[list_index].view(sim11.shape[1],sim11.shape[0],sim11.shape[-1]-1),0,1)
-            sim22= torch.transpose(torch.transpose(sim22,0.1).flatten()[list_index].view(sim22.shape[1],sim22.shape[0],sim22.shape[-1]-1),0,1)
+            sim11= torch.transpose(torch.transpose(sim11,0,1).flatten()[list_index].view(sim11.shape[1],sim11.shape[0],sim11.shape[-1]-1),0,1)
+            sim22= torch.transpose(torch.transpose(sim22,0,1).flatten()[list_index].view(sim22.shape[1],sim22.shape[0],sim22.shape[-1]-1),0,1)
             print(sim11.shape)
             #sim11 = torch.transpose(torch.transpose(sim11,0,1).flatten()[1:].view(sim11.shape[1],sim11.shape[0]-1, sim11.shape[0]+1, )[:,:,:-1].reshape(sim11.shape[1],sim11.shape[0], sim11.shape[0]-1,),0,1)
             #sim22 = torch.transpose(torch.transpose(sim22,0,1).flatten()[1:].view(sim22.shape[1],sim22.shape[0]-1, sim22.shape[0]+1,)[:,:,:-1].reshape(sim22.shape[1],sim22.shape[0], sim22.shape[0]-1,),0,1)
