@@ -27,7 +27,7 @@ class Custom_InfoNCE(nn.Module):
 
         d = sim12.shape[-1]
 
-        print("shape sim",sim11.shape,sim11[..., range(d), range(d)])
+        print("shape sim",sim11.shape)
 
         # removal of 1:1 pairs
         if not self.bound:
