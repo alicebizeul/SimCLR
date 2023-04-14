@@ -79,7 +79,7 @@ class Custom_InfoNCE(nn.Module):
             if self.bound:
                 if self.subsample:
                     sim12=sim12[:,keep,:]
-                num = - torch.mean(torch.log(sim12[..., range(d), range(d)]),dim=1)
+                num = - torch.mean(torch.log(sim12[..., :, range(d), range(d)]),dim=1)
                 deno = torch.cat([sim12, sim22], dim=-1)
                 deno = torch.log(torch.sum(torch.mean(deno,dim=1),dim=1))
                 total_loss_value += torch.mean(num + deno)
