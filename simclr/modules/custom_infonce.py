@@ -34,7 +34,7 @@ class Custom_InfoNCE(nn.Module):
             sim11 = sim11.flatten()[1:].view(sim11.shape[0]-1, sim11.shape[0]+1)[:,:-1].reshape(sim11.shape[0], sim11.shape[0]-1)
             sim22 = sim22.flatten()[1:].view(sim22.shape[0]-1, sim22.shape[0]+1)[:,:-1].reshape(sim22.shape[0], sim22.shape[0]-1)
         else:
-            list_index=[i*(sim11.shape[0]+i)+j*sim11.shape[0] for i in range(sim11.shape[0]) for j in range(sim11.shape[1])]
+            list_index=[i*(sim11.shape[0]+1)+j*sim11.shape[0] for i in range(sim11.shape[0]) for j in range(sim11.shape[1])]
             print(list_index)
             mask = [0 if index in list_index else 1 for index in range(sim11.shape[0]*sim11.shape[1]*sim11.shape[2])]
             print(list_index,mask)
