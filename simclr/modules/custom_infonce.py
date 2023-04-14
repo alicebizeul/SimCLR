@@ -94,6 +94,8 @@ def custom_similarity(p_z_zrec,p_zpos_zrecpos,bound,subsample):
             p_z_zrec = p_z_zrec[:,keep,:]
             p_zpos_zrecpos = p_zpos_zrecpos[:,keep,:]
         else: return torch.log(torch.sum(p_z_zrec*p_zpos_zrecpos,dim=1))  # log because cross entropy adds an exp
-    else: return p_z_zrec*p_zpos_zrecpos
+    else:
+        print(p_z_zrec*p_zpos_zrecpos) 
+        return p_z_zrec*p_zpos_zrecpos
 
 
