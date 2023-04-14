@@ -41,8 +41,6 @@ class Custom_InfoNCE(nn.Module):
             #sim11 = torch.transpose(torch.transpose(sim11,0,1).flatten()[1:].view(sim11.shape[1],sim11.shape[0]-1, sim11.shape[0]+1, )[:,:,:-1].reshape(sim11.shape[1],sim11.shape[0], sim11.shape[0]-1,),0,1)
             #sim22 = torch.transpose(torch.transpose(sim22,0,1).flatten()[1:].view(sim22.shape[1],sim22.shape[0]-1, sim22.shape[0]+1,)[:,:,:-1].reshape(sim22.shape[1],sim22.shape[0], sim22.shape[0]-1,),0,1)
 
-        print("After",sim11)
-
         print("Removal of duplo",sim11.shape,)
 
         # if not self.simclr_compatibility:
@@ -99,6 +97,7 @@ def custom_similarity(p_z_zrec,p_zpos_zrecpos,bound,subsample):
             p_zpos_zrecpos = p_zpos_zrecpos[:,keep,:]
         else: return torch.log(torch.sum(p_z_zrec*p_zpos_zrecpos,dim=1))  # log because cross entropy adds an exp
     else:
+        print(p_z_zrec.shape,p_zpos_zrecpos.shape)
         print(p_z_zrec*p_zpos_zrecpos) 
         return p_z_zrec*p_zpos_zrecpos
 
