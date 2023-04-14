@@ -49,21 +49,26 @@ class Custom_InfoNCE(nn.Module):
 
         #     total_loss_value = torch.mean(- pos + neg)
         if self.bound:
+            print(positive_rec)
             if self.subsample:
                 keep=random.shuffle(list(np.range(anchor_rec.shape[1])))
                 sim11=sim11[:,keep,:]
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
+            print(positive_rec)
             num = - torch.mean(torch.log(sim12[..., range(d), range(d)]),dim=1)
+            print(positive_rec)
             deno = torch.cat([sim12, sim11], dim=-1)
+            print(positive_rec)
             deno = torch.log(torch.sum(torch.mean(deno,dim=1),dim=1))
+            print(positive_rec)
             total_loss_value = torch.mean(num + deno)
         else:
             # diagonal - targets where the values should be the highest
             raw_scores1 = torch.cat([sim12, sim11], dim=-1)
             targets1 = torch.arange(d, dtype=torch.long, device=raw_scores1.device)
             total_loss_value = torch.nn.CrossEntropyLoss()(raw_scores1, targets1)
-
+        print(positive_rec)
         if self.symetric: 
             print(positive_rec)
             sim12 = self.similarity_f(positive_rec,anchor_rec)
