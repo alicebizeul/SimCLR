@@ -15,12 +15,22 @@ conda activate infonce
 
 
 ID_LEARNSTD=$(expr $SLURM_ARRAY_TASK_ID / 384)  # 2
-ID_BOUND=$(expr $SLURM_ARRAY_TASK_ID / 192) # 2
-ID_CLASSES=$(expr $SLURM_ARRAY_TASK_ID / 48) # 4
-ID_LEARNSTD_EPOCHS=$(expr $SLURM_ARRAY_TASK_ID / 16) # 3
-ID_LR=$(expr $SLURM_ARRAY_TASK_ID / 4) # 4
-ID_NORM=$(expr $SLURM_ARRAY_TASK_ID / 2) # 2
-ID_SUBSAMPLE=$(expr $SLURM_ARRAY_TASK_ID % 2) # 2
+TMP0=$(expr 384 '*' $ID_LEARNSTD)
+TMP1=$(expr $SLURM_ARRAY_TASK_ID - $TMP0)
+ID_BOUND=$(expr $TMP1 / 192) # 2
+TMP2=$(expr 192 '*' $ID_BOUND)
+TMP3=$(expr $TMP1 - $TMP2)
+ID_CLASSES=$(expr $TMP3 / 48) # 4
+TMP4=$(expr 48 '*' $ID_CLASSES)
+TMP5=$(expr $TMP3 - $TMP4)
+ID_LEARNSTD_EPOCHS=$(expr $TMP5 / 16) # 3
+TMP6=$(expr 16 '*' $ID_LEARNSTD_EPOCHS)
+TMP7=$(expr $TMP5 - $TMP6)
+ID_LR=$(expr $TMP7 / 4) # 4
+TMP8=$(expr 4 '*' $ID_LR)
+TMP9=$(expr $TMP7 - $TMP8)
+ID_NORM=$(expr $TMP9 / 2) # 2
+ID_SUBSAMPLE=$(expr $TMP9 % 2) # 2
 
 
 
