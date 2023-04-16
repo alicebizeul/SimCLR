@@ -207,3 +207,7 @@ if __name__ == "__main__":
     print(
         f"[FINAL]\t Loss: {loss_epoch / len(arr_test_loader)}\t Accuracy: {accuracy_epoch / len(arr_test_loader)}"
     )
+
+    with open(args.model_path+'/accuracy.npy', 'wb') as f:
+        np.save(f, np.array([accuracy_epoch / len(arr_test_loader)]))
+

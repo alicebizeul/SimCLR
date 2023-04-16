@@ -110,6 +110,22 @@ python main.py \
         --learn_std=${LEARNSTD} \
         --std_epochs=${LSTD_EPOCHS} \
         --epochs=${EPOCHS} \
+        --epoch_num=${EPOCHS} \
+        --classes=${CLASSES} \
+        --normalize=${NORM} \
+        --lr_change=${LR_CHANGE} \
+        --lr=${LR} \
+        --bound=${BOUND} \
+        --subsample=${SUBSAMPLE} \
+        --model_path=${MODEL_PATH}
+
+
+python linear_evaluation.py \
+        --custom=True \
+        --learn_std=${LEARNSTD} \
+        --std_epochs=${LSTD_EPOCHS} \
+        --epochs=${EPOCHS} \
+        --epoch_num=${EPOCHS} \
         --classes=${CLASSES} \
         --normalize=${NORM} \
         --lr_change=${LR_CHANGE} \
