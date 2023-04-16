@@ -56,10 +56,11 @@ class Custom_InfoNCE(nn.Module):
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
             print(positive_rec)
-            print(sim12[..., :, range(d), range(d)].shape)
+            #print(sim12[..., range(d), :, range(d)].shape)
+            deno = torch.cat([sim12, sim11], dim=-1)
             num = - torch.mean(torch.log(sim12[..., range(d), :, range(d)]),dim=1)
             print(positive_rec)
-            deno = torch.cat([sim12, sim11], dim=-1)
+            del sim12
             print(positive_rec)
             deno = torch.log(torch.sum(torch.mean(deno,dim=1),dim=1))
             print(positive_rec)
