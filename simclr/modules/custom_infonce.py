@@ -41,7 +41,8 @@ class Custom_InfoNCE(nn.Module):
         #     total_loss_value = torch.mean(- pos + neg)
         if self.bound:
             if self.subsample:
-                random.shuffle(list(np.arange(int(anchor_rec.shape[1]))))
+                keep = list(np.arange(int(anchor_rec.shape[1])))
+                random.shuffle(keep)
                 keep = keep[:int(len(keep)/2)]
                 print(keep) #[:int(int(anchor_rec.shape[1])/2)]
                 sim11=sim11[:,keep,:]
