@@ -44,7 +44,6 @@ class Custom_InfoNCE(nn.Module):
                 keep = list(np.arange(int(anchor_rec.shape[1])))
                 random.shuffle(keep)
                 keep = keep[:int(len(keep)/2)]
-                print(keep) #[:int(int(anchor_rec.shape[1])/2)]
                 sim11=sim11[:,keep,:]
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
