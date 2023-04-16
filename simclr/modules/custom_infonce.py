@@ -45,7 +45,6 @@ class Custom_InfoNCE(nn.Module):
                 sim11=sim11[:,keep,:]
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
-            #print(sim12[..., range(d), :, range(d)].shape)
             deno = torch.cat([sim12, sim11], dim=-1)
             num = - torch.mean(torch.log(sim12[..., range(d), :, range(d)]),dim=1)
             del sim12
@@ -89,10 +88,6 @@ def custom_similarity(p_z_zrec,p_zpos_zrecpos,bound,subsample):
             p_zpos_zrecpos = p_zpos_zrecpos[:,keep,:]
         else: return torch.log(torch.sum(p_z_zrec*p_zpos_zrecpos,dim=1))  # log because cross entropy adds an exp
     else:
-        print(p_z_zrec,)
-        print("test")
-        print(p_zpos_zrecpos)
-        print(p_z_zrec*p_zpos_zrecpos) 
         return p_z_zrec*p_zpos_zrecpos
 
 
