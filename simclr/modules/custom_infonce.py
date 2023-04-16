@@ -41,13 +41,12 @@ class Custom_InfoNCE(nn.Module):
         #     total_loss_value = torch.mean(- pos + neg)
         if self.bound:
             if self.subsample:
-                keep=random.shuffle(list(np.range(anchor_rec.shape[1])))
+                keep=random.shuffle(list(np.arange(anchor_rec.shape[1])))
                 sim11=sim11[:,keep,:]
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
             deno = torch.cat([sim12, sim11], dim=-1)
             num = - torch.mean(torch.log(sim12[..., range(d), :, range(d)]),dim=1)
-            del sim12
             deno = torch.log(torch.sum(torch.mean(deno,dim=1),dim=1))
             total_loss_value = torch.mean(num + deno)
         else:
@@ -56,6 +55,7 @@ class Custom_InfoNCE(nn.Module):
             targets1 = torch.arange(d, dtype=torch.long, device=raw_scores1.device)
             total_loss_value = torch.nn.CrossEntropyLoss()(raw_scores1, targets1)
         if self.symetric: 
+            del sim12
             sim12 = self.similarity_f(positive_rec,anchor_rec)
             # if not self.simclr_compatibility:
             #     pos = sim12[..., range(d), range(d)]
