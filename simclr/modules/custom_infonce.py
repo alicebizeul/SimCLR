@@ -19,17 +19,11 @@ class Custom_InfoNCE(nn.Module):
 
     def forward(self, anchor_rec, positive_rec):
 
-        print("Original inputs",anchor_rec.shape,positive_rec,(anchor_rec.unsqueeze(-1)*torch.transpose(positive_rec.unsqueeze(-1),0,-1)).shape)
-
         sim11 = self.similarity_f(anchor_rec,anchor_rec)
         sim22 = self.similarity_f(positive_rec,positive_rec)
         sim12 = self.similarity_f(anchor_rec,positive_rec)
 
-        print("1",positive_rec)
-
         d = sim12.shape[-1]
-
-        print("shape sim",sim11.shape)
 
         # removal of 1:1 pairs
         if not self.bound:
@@ -39,9 +33,6 @@ class Custom_InfoNCE(nn.Module):
             list_index=[idx for idx in range(sim11.shape[0]*sim11.shape[1]*sim11.shape[2]) if (idx-((idx//(sim11.shape[0]*sim11.shape[-1]))*(sim11.shape[0]*sim11.shape[-1])))%sim11.shape[0] != ((idx-((idx//(sim11.shape[0]*sim11.shape[-1]))*(sim11.shape[0]*sim11.shape[-1])))//sim11.shape[0]) ]  #.remove(-1)
             sim11= torch.transpose(torch.transpose(sim11,0,1).flatten()[list_index].view(sim11.shape[1],sim11.shape[0],sim11.shape[-1]-1),0,1)
             sim22= torch.transpose(torch.transpose(sim22,0,1).flatten()[list_index].view(sim22.shape[1],sim22.shape[0],sim22.shape[-1]-1),0,1)
-            print(sim11.shape)
-
-        print("Removal of duplo",sim11.shape,positive_rec)
 
         # if not self.simclr_compatibility:
         #     pos = sim12[..., range(d), range(d)]
@@ -49,30 +40,23 @@ class Custom_InfoNCE(nn.Module):
 
         #     total_loss_value = torch.mean(- pos + neg)
         if self.bound:
-            print(positive_rec)
             if self.subsample:
                 keep=random.shuffle(list(np.range(anchor_rec.shape[1])))
                 sim11=sim11[:,keep,:]
                 sim12=sim12[:,keep,:]
                 sim22=sim22[:,keep,:]
-            print(positive_rec)
             #print(sim12[..., range(d), :, range(d)].shape)
             deno = torch.cat([sim12, sim11], dim=-1)
             num = - torch.mean(torch.log(sim12[..., range(d), :, range(d)]),dim=1)
-            print(positive_rec)
             del sim12
-            print(positive_rec)
             deno = torch.log(torch.sum(torch.mean(deno,dim=1),dim=1))
-            print(positive_rec)
             total_loss_value = torch.mean(num + deno)
         else:
             # diagonal - targets where the values should be the highest
             raw_scores1 = torch.cat([sim12, sim11], dim=-1)
             targets1 = torch.arange(d, dtype=torch.long, device=raw_scores1.device)
             total_loss_value = torch.nn.CrossEntropyLoss()(raw_scores1, targets1)
-        print(positive_rec)
         if self.symetric: 
-            print(positive_rec)
             sim12 = self.similarity_f(positive_rec,anchor_rec)
             # if not self.simclr_compatibility:
             #     pos = sim12[..., range(d), range(d)]
