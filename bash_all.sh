@@ -112,7 +112,7 @@ if [[ ${ID_SUBSAMPLE} == 1 ]]; then
     SUBSAMPLE=False
 fi
 
-MODEL_PATH=/cluster/home/abizeul/test/${LEARNSTD}_${LSTD_EPOCHS}_${EPOCHS}_${CLASSES}_${NORM}_${LR}_${LR_CHANGE}_${BOUND}_${SUBSAMPLE}
+MODEL_PATH=/cluster/work/vogtlab/Group/abizeul/simclr/${LEARNSTD}_${LSTD_EPOCHS}_${EPOCHS}_${CLASSES}_${NORM}_${LR}_${LR_CHANGE}_${BOUND}_${SUBSAMPLE}
 mkdir -p ${MODEL_PATH}
 
 python main.py \
